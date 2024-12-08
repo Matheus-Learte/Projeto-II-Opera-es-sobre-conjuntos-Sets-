@@ -6,12 +6,12 @@
 
     typedef struct set SET;
 
-    SET* set_criar(int tipo);
+    SET* set_criar(int tipo);//x
     bool set_pertence(SET* A, int elemento);
-    bool set_inserir(SET* C, int elemento);
+    bool set_inserir(SET* C, int elemento);//x
     bool set_remover(SET* C, int elemento);
     void set_apagar(SET** C);
-    void set_imprimir(SET* C);
+    void set_imprimir(SET* C);//x
     SET* set_uniao(SET* A, SET *B);
     SET* set_interseccao(SET* A, SET* B);
 
