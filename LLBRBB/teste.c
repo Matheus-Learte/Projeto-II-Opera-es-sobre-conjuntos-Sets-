@@ -22,8 +22,10 @@ int main(void){
         int aux;
 
         scanf("%d", &aux);
-        llrbt_remover(T, aux);
+        bool aux2=llrbt_remover(T, aux);
+        printf("%d\n", aux2);
         llrbt_imprimir(T);
+
     }
 
     llrbt_apagar(&T);

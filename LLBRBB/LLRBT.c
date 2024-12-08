@@ -239,16 +239,17 @@ NO* apaga_menor(NO** raiz){
 return *raiz;
 }
 
-NO* remover_aux(NO** raiz, int chave){
-    if(raiz==NULL){
+NO* remover_aux(NO** raiz, int chave, bool* control){
+    if(*raiz==NULL){
         printf("O numero não esta na arvore\n");
+        *control=false;
         return NULL;
     }
     if(chave<(*raiz)->chave){
-        if(!vermelho((*raiz)->esq) && !vermelho((*raiz)->esq->esq)){
+        if(!vermelho((*raiz)->esq) && ((*raiz)->esq!=NULL && !vermelho((*raiz)->esq->esq))){
             *raiz= mov_ver_esq(*raiz);
         }
-        (*raiz)->esq=remover_aux(&(*raiz)->esq, chave);
+        (*raiz)->esq=remover_aux(&(*raiz)->esq, chave, control);
         
     }else{
         if(vermelho((*raiz)->esq)){
@@ -258,14 +259,14 @@ NO* remover_aux(NO** raiz, int chave){
             free(*raiz);
             return NULL;
         }
-        if(!vermelho((*raiz)->dir) && !vermelho((*raiz)->dir->esq)){
+        if(!vermelho((*raiz)->dir) && ((*raiz)->dir!=NULL && !vermelho((*raiz)->dir->esq))){
             *raiz=mov_ver_dir(*raiz);
         }
         if(chave==(*raiz)->chave){
             (*raiz)->chave=minimo((*raiz)->dir);
             (*raiz)->dir=apaga_menor(&(*raiz)->dir);
         }else
-            (*raiz)->dir=remover_aux(&(*raiz)->dir, chave);
+            (*raiz)->dir=remover_aux(&(*raiz)->dir, chave, control);
     }
 
     if(vermelho((*raiz)->dir) && !vermelho((*raiz)->esq)){
@@ -281,9 +282,13 @@ NO* remover_aux(NO** raiz, int chave){
 return *raiz;
 }
 
-void llrbt_remover(LLRBT* T, int chave){
-    if(T!=NULL && llrbt_buscar(T, chave)){
-        remover_aux(&T->raiz, chave);
-    }else
-        printf("Esse numero não esta na arvore\n");
+bool llrbt_remover(LLRBT* T, int chave){
+    if(T!=NULL){
+       bool control=true;
+       T->raiz=remover_aux(&T->raiz, chave, &control);
+
+        return control;
+    }
+
+return false;
 }

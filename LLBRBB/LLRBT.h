@@ -9,7 +9,7 @@
     void llrbt_apagar(LLRBT** T);
     bool llrbt_buscar(LLRBT* T, int chave);
     bool llrbt_inserir(LLRBT* T, int chave);
-    void llrbt_remover(LLRBT* T, int chave);
+    bool llrbt_remover(LLRBT* T, int chave);
     void llrbt_imprimir(LLRBT* T);
 
 #endif
