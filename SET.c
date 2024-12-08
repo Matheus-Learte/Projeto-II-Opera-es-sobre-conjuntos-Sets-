@@ -14,10 +14,10 @@ SET* set_criar(int tipo){
     if(aux!=NULL){
         aux->tipo=tipo;
 
-        if(tipo==1){
+        if(tipo==0){
             aux->avl=NULL;
         }else
-        if(tipo==0){
+        if(tipo==1){
             aux->rubro=NULL;
         }else
             return NULL;
@@ -29,7 +29,7 @@ return aux;
 
 void set_imprimir(SET* C){
     if(C!=NULL){
-        if(C->tipo==1){
+        if(C->tipo==0){
             avl_imprimir(C->avl);
         }else
             llrbt_imprimir(C->rubro);
@@ -38,7 +38,7 @@ void set_imprimir(SET* C){
 
 bool set_inserir(SET* C, int elemento){
     if(C!=NULL){
-        if(C->tipo==1){
+        if(C->tipo==0){
            return avl_inserir(C->avl, elemento);
         }else
            return llrbt_inserir(C->rubro, elemento);
