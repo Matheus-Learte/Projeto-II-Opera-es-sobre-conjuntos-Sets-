@@ -176,6 +176,7 @@ bool llrbt_inserir(LLRBT* T, int chave){
 
         if(aux!=NULL){
             T->raiz=inserir_aux(T->raiz, aux);
+            T->raiz->cor=BLACK;
             return true;
         }
     }
@@ -284,9 +285,9 @@ return *raiz;
 
 bool llrbt_remover(LLRBT* T, int chave){
     if(T!=NULL){
-       bool control=true;
-       T->raiz=remover_aux(&T->raiz, chave, &control);
-
+        bool control=true;
+        T->raiz=remover_aux(&T->raiz, chave, &control);
+        T->raiz->cor=BLACK;
         return control;
     }
 
