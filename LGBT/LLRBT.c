@@ -293,3 +293,49 @@ bool llrbt_remover(LLRBT* T, int chave){
 
 return false;
 }
+
+void uniao_aux(NO* no, LLRBT* B){
+    if(no!=NULL){
+        llrbt_inserir(B, no->chave);
+        uniao_aux(no->esq, B);
+        uniao_aux(no->dir, B);
+    }
+}
+
+LLRBT* llrbt_uniao(LLRBT* T, LLRBT* C){
+    if(T==NULL || C==NULL){
+        return NULL;
+    }
+
+    LLRBT *aux=llrbt_criar();
+
+    uniao_aux(T->raiz, aux);
+    uniao_aux(C->raiz, aux);
+
+return aux;
+}
+
+void interseccao_aux(LLRBT* Maior, NO* Menor, LLRBT* novo){
+    if(Menor==NULL){
+        return;
+    }
+
+    if(llrbt_buscar(Maior, Menor->chave)){
+        llrbt_inserir(novo, Menor->chave);
+    }
+
+    interseccao_aux(Maior, Menor->esq, novo);
+    interseccao_aux(Maior, Menor->dir, novo);
+}
+
+LLRBT* llrbt_interseccao(LLRBT* T, LLRBT* C){
+    if(T==NULL || C==NULL){
+        return NULL;
+    }
+
+    LLRBT* aux=llrbt_criar();
+
+    interseccao_aux(T, C->raiz, aux);
+
+return aux;
+}

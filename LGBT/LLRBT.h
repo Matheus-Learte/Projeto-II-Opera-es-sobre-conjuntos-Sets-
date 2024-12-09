@@ -11,5 +11,7 @@
     bool llrbt_inserir(LLRBT* T, int chave);
     bool llrbt_remover(LLRBT* T, int chave);
     void llrbt_imprimir(LLRBT* T);
+    LLRBT* llrbt_uniao(LLRBT* T, LLRBT* C);
+    LLRBT* llrbt_interseccao(LLRBT* T, LLRBT* C);
 
 #endif

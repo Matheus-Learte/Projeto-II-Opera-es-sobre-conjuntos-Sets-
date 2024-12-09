@@ -5,31 +5,31 @@
 int main(void){
     int quant;
     LLRBT* T=llrbt_criar();
+    LLRBT* C=llrbt_criar();
 
     scanf("%d", &quant);
 
     for(int i=0; i<quant; i++){
-        int aux;
+        int aux1, aux2;
 
-        scanf("%d", &aux);
-        llrbt_inserir(T, aux);
+        scanf("%d %d", &aux1, &aux2);
+        llrbt_inserir(T, aux1);
+        llrbt_inserir(C, aux2);
         llrbt_imprimir(T);
+        llrbt_imprimir(C);
     }
 
-    scanf("%d", &quant);
-
-    for(int i=0; i<quant; i++){
-        int aux;
-
-        scanf("%d", &aux);
-        bool aux2=llrbt_remover(T, aux);
-        printf("%d\n", aux2);
-        llrbt_imprimir(T);
-
-    }
+    LLRBT* uniao=llrbt_uniao(T,C);
+    LLRBT* inter=llrbt_interseccao(T,C);
+    printf("UNIÃO: ");
+    llrbt_imprimir(uniao);
+    printf("INTER: ");
+    llrbt_imprimir(inter);
 
     llrbt_apagar(&T);
-    llrbt_imprimir(T);
+    llrbt_apagar(&C);
+    llrbt_apagar(&uniao);
+    llrbt_apagar(&inter);
 
 return 0;
 }
