@@ -29,6 +29,11 @@ int main(void){
 
     }
 
+    int chaveBusca;
+    scanf("%d", &chaveBusca);
+    int aux3 = avl_busca(T, chaveBusca);
+    if(aux3 != 0) printf("Chave encontrada\n");
+
     avl_imprimir(T);
     avl_apagar(&T);
 

@@ -127,7 +127,7 @@ bool avl_inserir(AVL *avl, int chave){
 }
 
 int avl_busca_aux(NO *raiz, int chave){
-    if(raiz == NULL) return;
+    if(raiz == NULL) return 0;
 
     if(raiz->chave == chave)
         return chave;
@@ -138,7 +138,7 @@ int avl_busca_aux(NO *raiz, int chave){
         return avl_busca_aux(raiz->dir, chave);
 }
 
-int avl_buscar(AVL *avl, int chave){
+int avl_busca(AVL *avl, int chave){
     if(avl != NULL)
         printf("Chave nao encontrada.\n");
     return avl_busca_aux(avl->raiz, chave);

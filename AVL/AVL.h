@@ -5,7 +5,7 @@
     
     AVL *avl_criar(void);
     bool avl_inserir (AVL *avl, int chave);
-    int avl_buscar(AVL *avl, int chave);
+    int avl_busca(AVL *avl, int chave);
     bool avl_remover(AVL *avl, int chave);
     void avl_imprimir (AVL *avl); 
     void avl_apagar(AVL **avl); // x
