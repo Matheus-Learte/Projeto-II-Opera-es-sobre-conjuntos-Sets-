@@ -17,12 +17,12 @@ typedef struct avl {
 } AVL;
 
 AVL *avl_criar(void){
-    AVL *avl = (AVL*)malloc(sizeof(AVL));
+    AVL *T = (AVL*)malloc(sizeof(AVL));
 
-    if(avl!= NULL){
-        avl->raiz = NULL;
-        avl->profundidade = -1;
-        return avl;
+    if(T!= NULL){
+        T->raiz = NULL;
+        T->profundidade = -1;
+        return T;
     }
 
     printf("Erro na criacao da arvore.\n");
@@ -101,6 +101,8 @@ NO *inserir_no(NO *raiz, int chave){
         raiz->esq = inserir_no(raiz->esq, chave);
     else if(chave > raiz->chave)
         raiz->dir = inserir_no(raiz->dir, chave);
+    else 
+        return raiz;
 
     // Atualizar o fator de balanceamento
     raiz->FB = ((altura_no(raiz->esq)) - (altura_no(raiz->dir)));
@@ -119,9 +121,9 @@ NO *inserir_no(NO *raiz, int chave){
     return raiz;
 }
 
-bool avl_inserir(AVL *avl, int chave){
-    if(avl != NULL)
-        return(avl->raiz = inserir_no(avl->raiz, chave));
+bool avl_inserir(AVL *T, int chave){
+    if(T != NULL)
+        return(T->raiz = inserir_no(T->raiz, chave));
     printf("Erro na insercao do no.\n");
     return false;
 }
@@ -138,10 +140,9 @@ int avl_busca_aux(NO *raiz, int chave){
         return avl_busca_aux(raiz->dir, chave);
 }
 
-int avl_busca(AVL *avl, int chave){
-    if(avl != NULL)
-        printf("Chave nao encontrada.\n");
-    return avl_busca_aux(avl->raiz, chave);
+int avl_busca(AVL *T, int chave){
+    if(T != NULL)
+        return avl_busca_aux(T->raiz, chave);
 }
 
 void troca_max_esq(NO *troca, NO *raiz, NO *anterior){
@@ -205,9 +206,9 @@ NO *avl_remover_aux(NO **raiz, int chave){ // Igual ABB
     return *raiz;
 }
 
-bool avl_remover(AVL *avl, int chave){
-    if(avl != NULL)
-        return(avl->raiz = avl_remover_aux(&avl->raiz, chave));
+bool avl_remover(AVL *T, int chave){
+    if(T != NULL)
+        return(T->raiz = avl_remover_aux(&T->raiz, chave));
     printf("Erro na remocao do no.\n");
     return false;
 }
@@ -222,12 +223,12 @@ void avl_apagar_aux(NO **raiz){
     }
 }
 
-void avl_apagar(AVL **avl){
-    if(*avl != NULL){
-        avl_apagar_aux(&(*avl)->raiz);
-        free(*avl);
-        *avl = NULL;
-    } else if(*avl == NULL)
+void avl_apagar(AVL **T){
+    if(*T != NULL){
+        avl_apagar_aux(&(*T)->raiz);
+        free(*T);
+        *T = NULL;
+    } else if(*T == NULL)
         printf("Erro na liberacao da arvore.\n");
 }
 
@@ -240,9 +241,99 @@ void avl_imprimir_aux(NO *raiz){
     avl_imprimir_aux(raiz->dir); 
 }
 
-void avl_imprimir(AVL *avl){
-    if(avl != NULL){
-        avl_imprimir_aux(avl->raiz);
+void avl_imprimir(AVL *T){
+    if(T != NULL){
+        avl_imprimir_aux(T->raiz);
         printf("\n");
     }
+}
+
+/* ------------------------------ Funções Especificas ------------------------------ */
+
+void emOrdem(NO* raiz, int* array, int* index) {
+    if (raiz != NULL) {
+        emOrdem(raiz->esq, array, index);
+        array[(*index)++] = raiz->chave;
+        emOrdem(raiz->dir, array, index);
+    }
+}
+
+int avl_contarNos(NO *raiz){
+    if(raiz == NULL)
+        return 0;
+    return 1 + avl_contarNos(raiz->esq) + avl_contarNos(raiz->dir);
+}
+
+AVL *avl_uniao(AVL *T1, AVL *T2){
+    if(T2 == NULL)
+        return T1;
+    
+    if(T1 != NULL){
+        AVL *T3 = avl_criar();
+
+        int sizeT1 = avl_contarNos(T1->raiz);
+        int sizeT2 = avl_contarNos(T2->raiz);
+
+        int array1[sizeT1], array2[sizeT2], array3[sizeT1 + sizeT2];
+        int index1 = 0, index2 = 0;
+
+        emOrdem(T1->raiz, array1, &index1);
+        emOrdem(T2->raiz, array2, &index2);
+
+        for(int i = 0; i < sizeT1; i++){
+            array3[i] = array1[i];
+        }  
+
+        for(int i = 0; i < sizeT2; i++){
+            array3[sizeT1 + i] = array2[i];
+        }
+
+        for(int i = 0; i < sizeT1 + sizeT2; i++){
+            bool aux = avl_inserir(T3, array3[i]);
+
+            if(!aux)
+                printf("Erro em avl_uniao.\n");
+        }
+
+        return T3;
+    }
+    return NULL;
+}
+
+AVL *avl_interseccao(AVL *T1, AVL *T2){
+        if(T2 == NULL)
+        return T1;
+    
+    if(T1 != NULL){
+        AVL *T3 = avl_criar();
+
+        int sizeT1 = avl_contarNos(T1->raiz);
+        int sizeT2 = avl_contarNos(T2->raiz);
+
+        int array1[sizeT1], array2[sizeT2], array3[sizeT1 + sizeT2];
+        int index1 = 0, index2 = 0;
+
+        emOrdem(T1->raiz, array1, &index1);
+        emOrdem(T2->raiz, array2, &index2);
+
+        int idx = 0;
+        for(int i = 0; i < sizeT1; i++){
+            for(int j = 0; j < sizeT2; j++){
+                if(array1[i] == array2[j]){
+                    array3[idx] = array1[i];
+                    idx++;
+                }
+            }
+        }  
+
+        for(int i = 0; i < idx; i++){
+            bool aux = avl_inserir(T3, array3[i]);
+
+            if(!aux)
+                printf("Erro em avl_uniao.\n");
+        }
+
+        return T3;
+    }
+    return NULL;
 }
