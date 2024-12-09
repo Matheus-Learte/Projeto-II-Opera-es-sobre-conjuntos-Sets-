@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include "SET.h"
 
-struct set{
+typedef struct set{
     AVL* avl;
     LLRBT* rubro;
     int tipo;
-}
+} SET;
 
 SET* set_criar(int tipo){
     SET* aux=(SET*)malloc(sizeof(SET));
