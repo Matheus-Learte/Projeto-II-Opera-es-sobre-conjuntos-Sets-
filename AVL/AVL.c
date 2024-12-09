@@ -3,10 +3,10 @@
 #include <stdbool.h>
 #include "AVL.h"
 
-typedef struct no {
+typedef struct no_ {
     int chave;
-    NO *esq;
-    NO *dir;
+    struct no_ *esq;
+    struct no_ *dir;
     int FB;
 } NO;
 
@@ -24,6 +24,8 @@ AVL *avl_criar(void){
         avl->profundidade = -1;
         return avl;
     }
+
+    printf("Erro na criacao da arvore.\n");
     return NULL;
 }
 
@@ -87,6 +89,8 @@ NO *cria_no(int chave){
 
         return newNode;
     }
+
+    printf("Erro na criacao do no.\n");
     return NULL;
 }
 
@@ -118,6 +122,7 @@ NO *inserir_no(NO *raiz, int chave){
 bool avl_inserir(AVL *avl, int chave){
     if(avl != NULL)
         return(avl->raiz = inserir_no(avl->raiz, chave));
+    printf("Erro na insercao do no.\n");
     return false;
 }
 
@@ -185,12 +190,14 @@ NO *avl_remover_aux(NO **raiz, int chave){ // Igual ABB
 bool avl_remover(AVL *avl, int chave){
     if(avl != NULL)
         return(avl->raiz = avl_remover_aux(&avl->raiz, chave));
+    printf("Erro na remocao do no.\n");
+    return false;
 }
 
 void avl_apagar_aux(NO **raiz){
     if(*raiz != NULL){
         avl_apagar_aux(&(*raiz)->esq);
-        avl_apagar_aux(&(*raiz)->esq);
+        avl_apagar_aux(&(*raiz)->dir);
 
         free(*raiz);
         *raiz = NULL;
@@ -202,9 +209,22 @@ void avl_apagar(AVL **avl){
         avl_apagar_aux(&(*avl)->raiz);
         free(*avl);
         *avl = NULL;
-    }
+    } else if(*avl == NULL)
+        printf("Erro na liberacao da arvore.\n");
+}
+
+void avl_imprimir_aux(NO *raiz){
+    if(raiz == NULL)
+        return;
+
+    avl_imprimir_aux(raiz->esq);
+    printf("%d ", raiz->chave);
+    avl_imprimir_aux(raiz->dir); 
 }
 
 void avl_imprimir(AVL *avl){
-
+    if(avl != NULL){
+        avl_imprimir_aux(avl->raiz);
+        printf("\n");
+    }
 }

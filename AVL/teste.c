@@ -29,8 +29,8 @@ int main(void){
 
     }
 
-    avl_apagar(&T);
     avl_imprimir(T);
+    avl_apagar(&T);
 
 return 0;
 }
