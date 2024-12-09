@@ -2,25 +2,41 @@
 #include <stdlib.h>
 #include "SET.h"
 
-typedef struct set{
+struct set{
     AVL* avl;
     LLRBT* rubro;
     int tipo;
-} SET;
+}
+
 
 SET* set_criar(int tipo){
+    if(tipo!= 0 && tipo!=1){
+        printf("Tipo inválido");
+        return NULL;
+    }
+
     SET* aux=(SET*)malloc(sizeof(SET));
 
     if(aux!=NULL){
         aux->tipo=tipo;
 
         if(tipo==0){
-            aux->avl=NULL;
+            AVL* avl=alv_criar();
+
+            if(avl!=NULL){
+                aux->avl=avl;
+            }else
+                printf("ERRO NA ALOCAÇÃO DA AVL\n");
+                free(aux);
+                return NULL;
         }else
-        if(tipo==1){
-            aux->rubro=NULL;
-        }else
-            return NULL;
+            LLRBT* rn=llrbt_criar();
+            
+            if(rn!=NULL){
+                aux->rubro=rn;
+            }else
+                free(aux);
+                return NULL;
     }else
         printf("Erro na alocação de memória para o SET\n");
 
@@ -55,6 +71,3 @@ SET* set_uniao(SET* A, SET *B){
 return NULL;
 }
 
-void set_apagar(SET** C){
-    
-}
