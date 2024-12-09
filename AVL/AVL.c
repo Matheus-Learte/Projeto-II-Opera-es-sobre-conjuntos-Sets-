@@ -126,6 +126,24 @@ bool avl_inserir(AVL *avl, int chave){
     return false;
 }
 
+int avl_busca_aux(NO *raiz, int chave){
+    if(raiz == NULL) return;
+
+    if(raiz->chave == chave)
+        return chave;
+
+    if(raiz->chave > chave)
+        return avl_busca_aux(raiz->esq, chave);
+    else if (raiz->chave < chave)
+        return avl_busca_aux(raiz->dir, chave);
+}
+
+int avl_buscar(AVL *avl, int chave){
+    if(avl != NULL)
+        printf("Chave nao encontrada.\n");
+    return avl_busca_aux(avl->raiz, chave);
+}
+
 void troca_max_esq(NO *troca, NO *raiz, NO *anterior){
     if(troca->dir != NULL){
         troca_max_esq(troca->dir, raiz, troca);

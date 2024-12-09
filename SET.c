@@ -55,3 +55,6 @@ SET* set_uniao(SET* A, SET *B){
 return NULL;
 }
 
+void set_apagar(SET** C){
+    
+}
