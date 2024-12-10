@@ -165,6 +165,7 @@ NO* cria_no_llrbt(int dado, int cor){
 
 return aux;
 }
+
 // Função auxiliar para inserir um nó já criado na sua posição correta. Após isso a função realiza o balanceamento da árvore, caso necessário.
 NO* inserir_aux(NO* raiz, NO* novo){
     // Realiza a busca da posição correta do nó e o insere.
@@ -209,6 +210,7 @@ bool llrbt_inserir(LLRBT* T, int chave){
 
 return false;
 }
+
 // Função auxiliar para buscar o menor elemento de uma árvore.
 int minimo(NO* no){
     while(no->esq!=NULL){
@@ -273,6 +275,7 @@ NO* apaga_menor(NO** raiz){
 
 return *raiz;
 }
+
 // Função auxiliar que remove um nó de uma árove se utilizando do conceito de propagação de aresta vermelha.
 NO* remover_aux(NO** raiz, int chave, bool* control){
     // Procura o nó e vai fazendo as propagações arestas vermelhas através de rotações e das funções 'mov_ver_esq' e 'mov_ver_dir'.
