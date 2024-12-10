@@ -75,7 +75,7 @@ void imprimir_ordem(NO *raiz){
     if(raiz!=NULL){
         imprimir_ordem(raiz->esq);
 
-        printf("%d ", raiz->chave);
+        printf("%d, ", raiz->chave);
 
         imprimir_ordem(raiz->dir);
     }

@@ -242,7 +242,7 @@ void avl_imprimir_aux(NO *raiz){
         return;
 
     avl_imprimir_aux(raiz->esq);
-    printf("%d ", raiz->chave);
+    printf("%d, ", raiz->chave);
     avl_imprimir_aux(raiz->dir); 
 }
 
