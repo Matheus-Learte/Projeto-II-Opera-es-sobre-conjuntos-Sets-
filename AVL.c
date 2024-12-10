@@ -136,54 +136,65 @@ NO *inserir_no(NO *raiz, int chave){
 
 // Função para inserir um elemento na árvore.
 bool avl_inserir(AVL *T, int chave){
+    // Usa uma função auxiliar para poder fazer recurção.
     if(T != NULL)
         return(T->raiz = inserir_no(T->raiz, chave));
     printf("Erro na insercao do no.\n");
     return false;
 }
 
-bool avl_busca_aux(NO *raiz, int chave){
+// Função auxiliar para busca de um elemento.
+bool avl_buscar_aux(NO *raiz, int chave){
     if(raiz == NULL) return false;
 
     if(raiz->chave == chave)
         return true;
 
+    // Faz uso de recursão para buscar nas sub-árvores.
     if(raiz->chave > chave)
-        return avl_busca_aux(raiz->esq, chave);
+        return avl_buscar_aux(raiz->esq, chave);
     else if (raiz->chave < chave)
-        return avl_busca_aux(raiz->dir, chave);
+        return avl_buscar_aux(raiz->dir, chave);
 }
 
-bool avl_busca(AVL *T, int chave){
+// Função para buscar um elemento na árvore.
+bool avl_buscar(AVL *T, int chave){
+    // Usa uma função auxiliar para poder fazer recurção.
     if(T != NULL)
-        return avl_busca_aux(T->raiz, chave);
+        return avl_buscar_aux(T->raiz, chave);
 }
 
+// Função auxiliar para fazer a troca de um elemento removido pelo maior número da sub-árvore esquerda desse elemento.
 void troca_max_esq(NO *troca, NO *raiz, NO *anterior){
+    // Busca o maior elemento da sub-árvore esquerda.
     if(troca->dir != NULL){
         troca_max_esq(troca->dir, raiz, troca);
         return;
     }
 
+    // Faz a troca do elemento.
     if(raiz == anterior)
         anterior->esq = troca->esq;
     else
         anterior->dir =  troca->esq;
     
+    // Libera o elemento removido.
     raiz->chave = troca->chave;
     free(troca);
     troca = NULL;
 }
 
+// Função auxiliar para remoção.
 NO *avl_remover_aux(NO **raiz, int chave){ // Igual ABB
     if(*raiz==NULL){
-        printf("NO não encontrado\n");
+        printf("No não encontrado\n");
         return NULL;
     }
 
     NO *aux;
 
     if(chave == (*raiz)->chave){
+        // Caso 1 e 2: sem nós filhos ou só um nó filho; o tratamento é o mesmo.
         if((*raiz)->esq == NULL || (*raiz)->dir == NULL){
             aux = *raiz;
 
@@ -195,15 +206,18 @@ NO *avl_remover_aux(NO **raiz, int chave){ // Igual ABB
             free(aux);
             aux = NULL;
         } else {
+            // Caso 3: dois nós filhos. Encontra o maior elemento da sub-árvore esquerda e o substitui pelo elemento a ser removido.
             troca_max_esq((*raiz)->esq, (*raiz), (*raiz));
         }
     } else {
+        // Busca do elemento a ser removido.
         if(chave < (*raiz)->chave)
             (*raiz)->esq = avl_remover_aux(&(*raiz)->esq, chave);
         else
             (*raiz)->dir = avl_remover_aux(&(*raiz)->dir, chave);
     }
 
+    // Rebalanceia a árvore após a remoção do eleemento.
     if(*raiz != NULL){
         (*raiz)->FB = altura_no((*raiz)->esq) - altura_no((*raiz)->dir);
     
@@ -225,13 +239,16 @@ NO *avl_remover_aux(NO **raiz, int chave){ // Igual ABB
     return *raiz;
 }
 
+// Função para remover um elemento da árvore.
 bool avl_remover(AVL *T, int chave){
+    // Usa uma função auxiliar para poder fazer recurção.
     if(T != NULL)
         return(T->raiz = avl_remover_aux(&T->raiz, chave));
     printf("Erro na remocao do no.\n");
     return false;
 }
 
+// Função auxiliar para apagar os elementos da árvore.
 void avl_apagar_aux(NO **raiz){
     if(*raiz != NULL){
         avl_apagar_aux(&(*raiz)->esq);
@@ -242,7 +259,9 @@ void avl_apagar_aux(NO **raiz){
     }
 }
 
+// Função para apagar a árvore.
 void avl_apagar(AVL **T){
+    // Usa uma função auxiliar para poder fazer recurção e apagar os elementos, em seguida libera a árvore.
     if(*T != NULL){
         avl_apagar_aux(&(*T)->raiz);
         free(*T);
@@ -251,6 +270,7 @@ void avl_apagar(AVL **T){
         printf("Erro na liberacao da arvore.\n");
 }
 
+// Função auxiliar para imprimir os elementos da árvore de forma recursiva.
 void avl_imprimir_aux(NO *raiz){
     if(raiz == NULL)
         return;
@@ -260,6 +280,7 @@ void avl_imprimir_aux(NO *raiz){
     avl_imprimir_aux(raiz->dir); 
 }
 
+// Função para imprimir os elementos, em ordem crescente, da árvore.
 void avl_imprimir(AVL *T){
     if(T != NULL){
         avl_imprimir_aux(T->raiz);
@@ -269,20 +290,16 @@ void avl_imprimir(AVL *T){
 
 /* ------------------------------ Funções Especificas ------------------------------ */
 
-void emOrdem(NO* raiz, int* array, int* index) {
-    if (raiz != NULL) {
-        emOrdem(raiz->esq, array, index);
-        array[(*index)++] = raiz->chave;
-        emOrdem(raiz->dir, array, index);
+// Função auxiliar para fazer uso da recursão, ela insere os elementos numa nova aŕvore.
+void avl_uniao_aux(NO *raiz, AVL *T){
+    if(raiz != NULL){
+        avl_inserir(T, raiz->chave);
+        avl_uniao_aux(raiz->esq, T);
+        avl_uniao_aux(raiz->dir, T);
     }
 }
 
-int avl_contarNos(NO *raiz){
-    if(raiz == NULL)
-        return 0;
-    return 1 + avl_contarNos(raiz->esq) + avl_contarNos(raiz->dir);
-}
-
+// Função para realizar a união de duas árvores.
 AVL *avl_uniao(AVL *T1, AVL *T2){
     if(T2 == NULL)
         return T1;
@@ -290,35 +307,28 @@ AVL *avl_uniao(AVL *T1, AVL *T2){
     if(T1 != NULL){
         AVL *T3 = avl_criar();
 
-        int sizeT1 = avl_contarNos(T1->raiz);
-        int sizeT2 = avl_contarNos(T2->raiz);
-
-        int array1[sizeT1], array2[sizeT2], array3[sizeT1 + sizeT2];
-        int index1 = 0, index2 = 0;
-
-        emOrdem(T1->raiz, array1, &index1);
-        emOrdem(T2->raiz, array2, &index2);
-
-        for(int i = 0; i < sizeT1; i++){
-            array3[i] = array1[i];
-        }  
-
-        for(int i = 0; i < sizeT2; i++){
-            array3[sizeT1 + i] = array2[i];
-        }
-
-        for(int i = 0; i < sizeT1 + sizeT2; i++){
-            bool aux = avl_inserir(T3, array3[i]);
-
-            if(!aux)
-                printf("Erro em avl_uniao.\n");
-        }
+        // Faz uso de uma função auxiliar recursivamente.
+        avl_uniao_aux(T1->raiz, T3);
+        avl_uniao_aux(T2->raiz, T3);
 
         return T3;
     }
     return NULL;
 }
 
+// Função auxiliar para fazer uso da recursão, ela insere os elementos em comum numa nova árvore.
+void avl_interseccao_aux(AVL *Tmaior, NO *menor, AVL *novo){
+    if(menor == NULL)
+        return;
+
+    if(avl_buscar(Tmaior, menor->chave))
+        avl_inserir(novo, menor->chave);
+    
+    avl_interseccao_aux(Tmaior, menor->esq, novo);
+    avl_interseccao_aux(Tmaior, menor->dir, novo);
+}
+
+// Função para realizar a intersecção de duas árvores.
 AVL *avl_interseccao(AVL *T1, AVL *T2){
         if(T2 == NULL)
         return T1;
@@ -326,31 +336,7 @@ AVL *avl_interseccao(AVL *T1, AVL *T2){
     if(T1 != NULL){
         AVL *T3 = avl_criar();
 
-        int sizeT1 = avl_contarNos(T1->raiz);
-        int sizeT2 = avl_contarNos(T2->raiz);
-
-        int array1[sizeT1], array2[sizeT2], array3[sizeT1 + sizeT2];
-        int index1 = 0, index2 = 0;
-
-        emOrdem(T1->raiz, array1, &index1);
-        emOrdem(T2->raiz, array2, &index2);
-
-        int idx = 0;
-        for(int i = 0; i < sizeT1; i++){
-            for(int j = 0; j < sizeT2; j++){
-                if(array1[i] == array2[j]){
-                    array3[idx] = array1[i];
-                    idx++;
-                }
-            }
-        }  
-
-        for(int i = 0; i < idx; i++){
-            bool aux = avl_inserir(T3, array3[i]);
-
-            if(!aux)
-                printf("Erro em avl_uniao.\n");
-        }
+        avl_interseccao_aux(T1, T2->raiz, T3);
 
         return T3;
     }

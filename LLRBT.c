@@ -5,9 +5,7 @@
 #define RED 1 // Define que 'RED'=1.
 #define BLACK 0 // Define que 'BLACK'=0.
 
-/*
-    OBS: A cor da aresta entre um nó pai e um nó filho é ditada pela cor que está guardada no nó filho.
-*/
+// OBS: A cor da aresta entre um nó pai e um nó filho é ditada pela cor que está guardada no nó filho.
 
 // Definição do tipo 'NO'.
 typedef struct no_ NO;
@@ -341,6 +339,8 @@ bool llrbt_remover(LLRBT* T, int chave){
 
 return false;
 }
+
+/* ------------------------------ Funções Especificas ------------------------------ */
 
 // Função auxiliar para inserir todos os nós de uma árvore em outra.
 void uniao_aux(NO* no, LLRBT* B){

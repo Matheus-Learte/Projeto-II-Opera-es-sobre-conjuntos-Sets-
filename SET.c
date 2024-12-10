@@ -85,7 +85,7 @@ return NULL;
 bool set_pertence(SET* A, int elemento){
     if(A!=NULL){
         if(A->tipo==0){
-            return avl_busca(A->avl, elemento);
+            return avl_buscar(A->avl, elemento);
         }else
             return llrbt_buscar(A->rubro, elemento);
     }else
