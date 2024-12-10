@@ -1,13 +1,24 @@
+/*
+O programa implementa operações sobre conjuntos utilizando árvores balanceadas (AVL ou LLRBT). 
+Ele permite ao usuário inserir elementos nos conjuntos, realizar operações de união, interseção, verificação de pertencimento e remoção de elementos, 
+além de imprimir o resultado de cada operação. O código também se preocupa em liberar a memória ao final, evitando vazamentos de memória.
+*/
+
+// Bibliotecas e TAD:
 #include <stdio.h>
 #include <stdlib.h>
 #include "SET.h"
 
+// FUnção principal:
 int main(void){
+    // Declaração e inicialização dos conjuntos A e B.
     SET *A, *B;
     int quant_a, quant_b, tipo, aux;
 
-    scanf("%d", &tipo);/* 0=avl, 1=llrbt*/
+    // Lê o tipo de árvore que será usada (0 = AVL, 1 = LLRBT).
+    scanf("%d", &tipo);
 
+    // Cria os conjuntos A e B usando a árvore escolhida.
     A=set_criar(tipo);
     B=set_criar(tipo);
 
@@ -23,6 +34,7 @@ int main(void){
         set_inserir(B, aux);
     }
 
+    // Menu para escolher a operação desejada (1 = pertence, 2 = união, 3 = interseção, 4 = remover elemento).
     int op;
     scanf("%d", &op);
 
@@ -71,6 +83,7 @@ int main(void){
         }
     }
 
+    // Apaga os conjuntos A e B.
     set_apagar(&A);
     set_apagar(&B);
 

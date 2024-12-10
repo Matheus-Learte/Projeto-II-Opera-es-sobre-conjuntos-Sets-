@@ -1,3 +1,10 @@
+/*
+Este código implementa um tipo abstrato de dado (TAD) chamado SET, utilizando especificamente uma Árvore AVL (Árvore Binária de Busca Balanceada) 
+para representar os conjuntos. A Árvore AVL é uma árvore binária de busca balanceada, que garante que as operações de inserção, remoção e busca 
+sejam feitas de forma eficiente, com complexidade O(log n) no pior caso, devido ao seu balanceamento automático.
+*/
+
+// Bibliotecas e TAD:
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>

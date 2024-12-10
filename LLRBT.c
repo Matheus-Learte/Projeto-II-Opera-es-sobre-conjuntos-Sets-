@@ -1,3 +1,9 @@
+/*
+Este código implementa um tipo abstrato de dado (TAD) chamado SET, que utiliza especificamente a Árvore Rubro-Negra (LLRBT) para representar os conjuntos. 
+A Árvore Rubro-Negra é uma árvore binária de busca balanceada que garante operações eficientes (inserção, remoção e busca) com complexidade O(log n) no pior caso. 
+*/
+
+// Bibliotecas e TAD:
 #include <stdio.h>
 #include <stdlib.h>
 #include "LLRBT.h"

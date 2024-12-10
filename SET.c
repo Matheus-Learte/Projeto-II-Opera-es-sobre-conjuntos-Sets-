@@ -1,3 +1,10 @@
+/*
+O código implementa um tipo abstrato de dado (TAD) chamado SET, que permite a manipulação de conjuntos usando duas opções de árvores balanceadas: 
+- AVL (Árvore Binária de Busca Balanceada); ou 
+- LLRBT (Árvore Rubro-Negra)
+*/
+
+// Bibliotecas e TAD:
 #include <stdio.h>
 #include <stdlib.h>
 #include "SET.h"
