@@ -3,20 +3,23 @@
 #include <stdbool.h>
 #include "AVL.h"
 
+// Defnição do tipo 'NO'.
 typedef struct no_ {
-    int chave;
-    struct no_ *esq;
-    struct no_ *dir;
-    int FB;
+    int chave; // Valor do nó.
+    struct no_ *esq; // Nó esquerdo.
+    struct no_ *dir; // Nó direito.
+    int FB; // Fator de Balanceamento.
 } NO;
 
+// Defnição do tipo 'AVL'.
 typedef struct avl {
-    NO *raiz;
-    int profundidade;
-    // ...
+    NO *raiz; // Raiz da árvore.
+    int profundidade; // Profundidade da árvore.
 } AVL;
 
+// Função para criar uma árvore AVL.
 AVL *avl_criar(void){
+    // Aloca memória e verifica a alocação, além de inicializar a árvore.
     AVL *T = (AVL*)malloc(sizeof(AVL));
 
     if(T!= NULL){
@@ -31,6 +34,7 @@ AVL *avl_criar(void){
 
 /* ------------------------------ Rotações ------------------------------ */
 
+// Função auxiliar para fazer uma rotação direita (balaneamento).
 NO *rot_dir(NO *a){
     NO *b = a->esq;
     a->esq = b->dir;
@@ -41,6 +45,7 @@ NO *rot_dir(NO *a){
     return b;
 }
 
+// Função auxiliar para fazer uma rotação esquerda (balaneamento).
 NO *rot_esq(NO *a){
     NO *b = a->dir;
     a->dir = b->esq;
@@ -51,34 +56,39 @@ NO *rot_esq(NO *a){
     return b;
 }
 
+// Função auxiliar para fazer uma rotação esquerda-direita (balaneamento).
 NO *rot_esqDir(NO *a){
     a->esq = rot_esq(a->esq);
     return rot_dir(a);
 }
 
+// Função auxiliar para fazer uma rotação direita-esquerda (balaneamento).
 NO *rot_dirEsq(NO *a){
     a->dir = rot_dir(a->dir);
     return rot_esq(a);
 }
 
 /* ---------------------------------------------------------------------- */
-
+ 
+// Função auxiliar para retornar a altura de um nó (usada para determinar o balancemento de um nó).
 int altura_no(NO *no){
     if (no == NULL)
         return 0;
     
-    // Recursivamente calcula as alturas das sub-árvores esquerda e direita
+    // Recursivamente calcula as alturas das sub-árvores esquerda e direita.
     int altura_esq = altura_no(no->esq);
     int altura_dir = altura_no(no->dir);
 
-    // A altura do nó é 1 + a maior altura das subárvores
+    // A altura do nó é 1 + a maior altura das subárvores.
     if(altura_esq > altura_dir)
         return altura_esq + 1;
     else 
         return altura_dir + 1;
 }
 
+// Função auxiliar para criar um nó.
 NO *cria_no(int chave){
+    // Aloca memória e verifica a alocação, além de inicializar o nó.
     NO *newNode = (NO*)malloc(sizeof(NO));
 
     if(newNode!= NULL){
@@ -94,7 +104,9 @@ NO *cria_no(int chave){
     return NULL;
 }
 
+// Função auxiliar para fazer a inserção do nó, já criado, na sua posição correta. Além de fazer o balanceamento da árvore.
 NO *inserir_no(NO *raiz, int chave){
+    // Busca a posição ideal para inserir o nó.
     if(raiz == NULL)
         raiz = cria_no(chave);
     else if(chave < raiz->chave)
@@ -104,9 +116,10 @@ NO *inserir_no(NO *raiz, int chave){
     else 
         return raiz;
 
-    // Atualizar o fator de balanceamento
+    // Atualizar o fator de balanceamento.
     raiz->FB = ((altura_no(raiz->esq)) - (altura_no(raiz->dir)));
 
+    // Realizar as rotações caso o fator de balanceamento seja 2 ou -2.
     if(raiz->FB == -2)
         if(raiz->dir->FB <= 0)
             raiz = rot_esq(raiz);
@@ -121,6 +134,7 @@ NO *inserir_no(NO *raiz, int chave){
     return raiz;
 }
 
+// Função para inserir um elemento na árvore.
 bool avl_inserir(AVL *T, int chave){
     if(T != NULL)
         return(T->raiz = inserir_no(T->raiz, chave));
