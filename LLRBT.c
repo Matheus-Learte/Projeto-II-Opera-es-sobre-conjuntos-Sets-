@@ -5,6 +5,10 @@
 #define RED 1 // Define que RED=1.
 #define BLACK 0 // Define que BLACK=0.
 
+/*
+    OBS: A cor da aresta entre um nó pai e um nó filho é ditada pela cor que está guardada no nó filho.
+*/
+
 // Definição do tipo 'NO'.
 typedef struct no_ NO;
 
@@ -55,7 +59,7 @@ void llrbt_apagar(LLRBT** T){
     }
 }
 
-// Função auxiliar que procura um elemento dentro da árvore. Retorna 'true' caso encontre e 'false' se não.
+// Função auxiliar para procurar um elemento dentro da árvore. Retorna 'true' caso encontre e 'false' se não.
 bool busca_aux(NO* raiz, int chave){
     if(raiz!=NULL){
         if(raiz->chave==chave){
@@ -99,7 +103,7 @@ void llrbt_imprimir(LLRBT* T){
         printf("ERRO: A Árvore não existe\n");
 }
 
-// Função auxiliar que inverte as cores de um nó e de seus filhos, caso existam.
+// Função auxiliar para inverter as cores de um nó e de seus filhos, caso existam.
 void inverte(NO* no){
     if(no!=NULL){
         no->cor=!no->cor;
@@ -113,7 +117,7 @@ void inverte(NO* no){
     }
 }
 
-// Função auxiliar que realiza a rotação para a direita de um nó e conserta as cores depois da rotação (balanceamento).
+// Função auxiliar para realizar a rotação para a direita de um nó e conserta as cores depois da rotação (balanceamento).
 NO* rotacao_dir(NO* no){
     NO* aux=no->esq;
 
@@ -125,7 +129,7 @@ NO* rotacao_dir(NO* no){
 return aux;
 }
 
-// Função auxiliar que realiza a rotação para a esquerda de um nó e conserta as cores depois da rotação (balanceamento).
+// Função auxiliar para realizar a rotação para a esquerda de um nó e conserta as cores depois da rotação (balanceamento).
 NO* rotacao_esq(NO* no){
     NO* aux=no->dir;
 
@@ -161,8 +165,9 @@ NO* cria_no_llrbt(int dado, int cor){
 
 return aux;
 }
-
+// Função auxiliar para inserir um nó já criado na sua posição correta. Após isso a função realiza o balanceamento da árvore, caso necessário.
 NO* inserir_aux(NO* raiz, NO* novo){
+    // Realiza a busca da posição correta do nó e o insere.
     if(raiz==NULL){
         raiz=novo;
     }else
@@ -173,19 +178,24 @@ NO* inserir_aux(NO* raiz, NO* novo){
         raiz->dir=inserir_aux(raiz->dir, novo);
     }
 
+    // Realiza o rebalanceamento da árvore.
     if(vermelho(raiz->dir) && !vermelho(raiz->esq)){
+        // Caso o nó equerdo seja preto e o direito vermelho realiza uma rotação para a esquerda.
         raiz=rotacao_esq(raiz);
     }
     if(vermelho(raiz->esq) && vermelho(raiz->esq->esq)){
+        // Caso o nó esquerdo seja vermelho e o nó esquerdo do nó esquerdo seja também, realiza uma rotação para a direita.
         raiz=rotacao_dir(raiz);
     }
     if(vermelho(raiz->esq) && vermelho(raiz->dir)){
+        // Caso o nó esquerdo e direito sejam vermelho inverte as cores.
         inverte(raiz);
     }
 
 return raiz;
 }
 
+// Função principal para inserir um elemento na árvore.
 bool llrbt_inserir(LLRBT* T, int chave){
     if(T!=NULL){
         NO* aux=cria_no_llrbt(chave, RED);
@@ -199,7 +209,7 @@ bool llrbt_inserir(LLRBT* T, int chave){
 
 return false;
 }
-
+// Função auxiliar para buscar o menor elemento de uma árvore.
 int minimo(NO* no){
     while(no->esq!=NULL){
         no=no->esq;
@@ -208,6 +218,7 @@ int minimo(NO* no){
 return no->chave;
 }
 
+// Função auxiliar para propagar aresta vermelha para a esquerda. 
 NO* mov_ver_esq(NO* raiz){
     inverte(raiz);
 
@@ -220,6 +231,7 @@ NO* mov_ver_esq(NO* raiz){
 return raiz;
 }
 
+// Função auxiliar para propagar aresta vermelha para a direita.
 NO* mov_ver_dir(NO* raiz){
     inverte(raiz);
 
@@ -231,32 +243,39 @@ NO* mov_ver_dir(NO* raiz){
 return raiz;
 }
 
+// Função auxiliar que apaga o menor nó de uma árvore se utilizando do conceito de propagação de arestas vermelhas.
 NO* apaga_menor(NO** raiz){
+    // Procura o nó e propaga arestas vermelhas para baixo.
     if((*raiz)->esq==NULL){
         free(*raiz);
         return NULL;
     }
 
     if(!vermelho((*raiz)->esq) && !vermelho((*raiz)->esq->esq)){
+        //Propaga aresta vermelha para a esquerda.
         *raiz=mov_ver_esq(*raiz);
     }
     (*raiz)->esq=apaga_menor(&(*raiz)->esq);
 
-
+    // Realiza o rebalanceamento da árvore.
     if(vermelho((*raiz)->dir) && !vermelho((*raiz)->esq)){
+        // Caso o nó equerdo seja preto e o direito vermelho realiza uma rotação para a esquerda.
         *raiz=rotacao_esq(*raiz);
     }
     if(vermelho((*raiz)->esq) && vermelho((*raiz)->esq->esq)){
+        // Caso o nó esquerdo seja vermelho e o nó esquerdo do nó esquerdo seja também, realiza uma rotação para a direita.
         *raiz=rotacao_dir(*raiz);
     }
     if(vermelho((*raiz)->esq) && vermelho((*raiz)->dir)){
+        // Caso o nó esquerdo e direito sejam vermelho inverte as cores.
         inverte(*raiz);
     }
 
 return *raiz;
 }
-
+// Função auxiliar que remove um nó de uma árove se utilizando do conceito de propagação de aresta vermelha.
 NO* remover_aux(NO** raiz, int chave, bool* control){
+    // Procura o nó e vai fazendo as propagações arestas vermelhas através de rotações e das funções 'mov_ver_esq' e 'mov_ver_dir'.
     if(*raiz==NULL){
         printf("O numero não esta na arvore\n");
         *control=false;
@@ -264,41 +283,51 @@ NO* remover_aux(NO** raiz, int chave, bool* control){
     }
     if(chave<(*raiz)->chave){
         if(!vermelho((*raiz)->esq) && ((*raiz)->esq!=NULL && !vermelho((*raiz)->esq->esq))){
+            // Propaga aresta vermelha para a esquerda.
             *raiz= mov_ver_esq(*raiz);
         }
+        // Continua a procura na sub-árvore direita.
         (*raiz)->esq=remover_aux(&(*raiz)->esq, chave, control);
         
     }else{
         if(vermelho((*raiz)->esq)){
+            // Rotaciona para a direita.
             *raiz=rotacao_dir(*raiz);
         }
-        if(chave==(*raiz)->chave && (*raiz)->dir==NULL){
+        if(chave==(*raiz)->chave && (*raiz)->dir==NULL){ // Caso tenha encontrado o nó e ele não tem filho direito o nó pode apenas ser apagado.
             free(*raiz);
             return NULL;
         }
         if(!vermelho((*raiz)->dir) && ((*raiz)->dir!=NULL && !vermelho((*raiz)->dir->esq))){
+            // Propaga aresta para a direita.
             *raiz=mov_ver_dir(*raiz);
         }
         if(chave==(*raiz)->chave){
+            // Realiza a troca do nó que necessita ser apagado pelo menor da sub-árvore direita e depois apaga.
             (*raiz)->chave=minimo((*raiz)->dir);
             (*raiz)->dir=apaga_menor(&(*raiz)->dir);
         }else
-            (*raiz)->dir=remover_aux(&(*raiz)->dir, chave, control);
+            (*raiz)->dir=remover_aux(&(*raiz)->dir, chave, control);// Continua a procura na sub-árvore direita.
     }
 
+    // Rebalanceia a árvore.
     if(vermelho((*raiz)->dir) && !vermelho((*raiz)->esq)){
+        // Caso o nó equerdo seja preto e o direito vermelho realiza uma rotação para a esquerda.
         *raiz=rotacao_esq(*raiz);
     }
     if(vermelho((*raiz)->esq) && vermelho((*raiz)->esq->esq)){
+        // Caso o nó esquerdo seja vermelho e o nó esquerdo do nó esquerdo seja também, realiza uma rotação para a direita.
         *raiz=rotacao_dir(*raiz);
     }
     if(vermelho((*raiz)->esq) && vermelho((*raiz)->dir)){
+        // Caso o nó esquerdo e direito sejam vermelho inverte as cores.
         inverte(*raiz);
     }
 
 return *raiz;
 }
 
+// Função principal para remover um elemento da árvore.
 bool llrbt_remover(LLRBT* T, int chave){
     if(T!=NULL){
         bool control=true;
@@ -310,6 +339,7 @@ bool llrbt_remover(LLRBT* T, int chave){
 return false;
 }
 
+// Função auxiliar para inserir todos os nós de uma árvore em outra.
 void uniao_aux(NO* no, LLRBT* B){
     if(no!=NULL){
         llrbt_inserir(B, no->chave);
@@ -318,6 +348,7 @@ void uniao_aux(NO* no, LLRBT* B){
     }
 }
 
+// Função principal para unir duas árvores passadas criando uma nova estrutura que será a união das duas. 
 LLRBT* llrbt_uniao(LLRBT* T, LLRBT* C){
     if(T==NULL || C==NULL){
         return NULL;
@@ -331,6 +362,7 @@ LLRBT* llrbt_uniao(LLRBT* T, LLRBT* C){
 return aux;
 }
 
+// Função auxiliar para inserir todos os elementos em comum de duas árvores em uma terceira.
 void interseccao_aux(LLRBT* Maior, NO* Menor, LLRBT* novo){
     if(Menor==NULL){
         return;
@@ -344,6 +376,7 @@ void interseccao_aux(LLRBT* Maior, NO* Menor, LLRBT* novo){
     interseccao_aux(Maior, Menor->dir, novo);
 }
 
+// Função principal para realizar a intersecção de duas árvores criando uma nova estrutura para guardar esses elementos.
 LLRBT* llrbt_interseccao(LLRBT* T, LLRBT* C){
     if(T==NULL || C==NULL){
         return NULL;
