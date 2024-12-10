@@ -6,7 +6,7 @@ int main(void){
     SET *A, *B;
     int quant_a, quant_b, tipo, aux;
 
-    scanf("%d", &tipo);
+    scanf("%d", &tipo);/* 0=avl, 1=llrbt*/
 
     A=set_criar(tipo);
     B=set_criar(tipo);
@@ -28,18 +28,51 @@ int main(void){
 
     switch(op){
         case 1:{
+            scanf("%d", &aux);
 
+            if(set_pertence(A, aux)){
+                printf("Pertence\n");
+            }else
+                printf("Não pertence\n");
+        break;
         }
         case 2:{
+            SET* uniao;
 
+            if(quant_a>=quant_b){
+                uniao=set_uniao(A, B);
+            }else
+                uniao=set_uniao(B,A);
+            
+            set_imprimir(uniao);
+            set_apagar(&uniao);
+
+        break;
         }
         case 3:{
+            SET* interseccao;
 
+            if(quant_a>=quant_b){
+                interseccao=set_interseccao(A, B);
+            }else
+                interseccao=set_interseccao(B, A);
+
+            set_imprimir(interseccao);
+            set_apagar(&interseccao);
+
+        break;
         }
         case 4:{
-            
+            scanf("%d", &aux);
+
+            set_remover(A, aux);
+
+            set_imprimir(A);
         }
     }
+
+    set_apagar(&A);
+    set_apagar(&B);
 
 return 0;
 }

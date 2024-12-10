@@ -166,7 +166,7 @@ NO *avl_remover_aux(NO **raiz, int chave){ // Igual ABB
         printf("NO não encontrado\n");
         return NULL;
     }
-    
+
     NO *aux;
 
     if(chave == (*raiz)->chave){
