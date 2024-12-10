@@ -2,18 +2,21 @@
 #include <stdlib.h>
 #include "SET.h"
 
+ // Defnição do tipo 'SET':
 struct set{
-    AVL* avl;
-    LLRBT* rubro;
-    int tipo;
+    AVL* avl; // Árvore AVL.
+    LLRBT* rubro; // Árvore Rubro-Negra.
+    int tipo; // Tipo.
 };
 
+// Função para criar um conjunto.
 SET* set_criar(int tipo){
     if(tipo!= 0 && tipo!=1){
         printf("Tipo inválido");
         return NULL;
     }
 
+    // Aloca memória e verifica a alocação, além de inicializar o conjunto (sua árvore dependendo do tipo).
     SET* aux=(SET*)malloc(sizeof(SET));
 
     if(aux!=NULL){
@@ -45,6 +48,7 @@ SET* set_criar(int tipo){
 return aux;
 }
 
+// Função que imprime os elementos do conjunto `C` (imprime a árvore de acordo com o tipo).
 void set_imprimir(SET* C){
     if(C!=NULL){
         if(C->tipo==0){
@@ -55,6 +59,7 @@ void set_imprimir(SET* C){
         printf("O SET não existe\n"); 
 }
 
+// Função que insere um elemento no conjunto `C` (insere em uma das árvores dependendo do tipo).
 bool set_inserir(SET* C, int elemento){
     if(C!=NULL){
         if(C->tipo==0){
@@ -67,6 +72,7 @@ bool set_inserir(SET* C, int elemento){
 return false;
 }
 
+// Função que retorna a união de dois conjuntos `A` e `B` (dependendo do tipo, une duas avl's ou duas rubro-negra's).
 SET* set_uniao(SET* A, SET *B){
     if(A!=NULL && B!=NULL){
         SET* uniao=set_criar(A->tipo);
@@ -82,6 +88,7 @@ SET* set_uniao(SET* A, SET *B){
 return NULL;
 }
 
+// Função que verifica se um elemento pertence ao conjunto `A` (dependendo do tipo ele vai buscar o elemento em uma das árvores).
 bool set_pertence(SET* A, int elemento){
     if(A!=NULL){
         if(A->tipo==0){
@@ -94,6 +101,7 @@ bool set_pertence(SET* A, int elemento){
 return false;
 }
 
+// Função que remove um elemento do conjunto `C` (remove de uma das árvores dependendo do tipo).
 bool set_remover(SET* C, int elemento){
     if(C!=NULL){
         if(C->tipo==0){
@@ -106,6 +114,7 @@ bool set_remover(SET* C, int elemento){
 return false;
 }
 
+// Função que apaga (desaloca a memória de) o conjunto `C` (a árvore é escolhida de acordo com o tipo).
 void set_apagar(SET** C){
     if(C!=NULL){
         if((*C)->tipo==0){
@@ -117,6 +126,7 @@ void set_apagar(SET** C){
     }
 }
 
+// Função que retorna a interseção de dois conjuntos `A` e `B` (dependendo do tipo, intersecta duas avl's ou duas rubro-negra's).
 SET* set_interseccao(SET* A, SET* B){
     if(A!=NULL && B!=NULL){
         SET* interseccao=set_criar(A->tipo);
