@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "LLRBT.h"
 
-#define RED 1// Define que RED=1.
-#define BLACK 0// Define que BLACK=0.
+#define RED 1 // Define que 'RED'=1.
+#define BLACK 0 // Define que 'BLACK'=0.
 
 /*
     OBS: A cor da aresta entre um nó pai e um nó filho é ditada pela cor que está guardada no nó filho.
