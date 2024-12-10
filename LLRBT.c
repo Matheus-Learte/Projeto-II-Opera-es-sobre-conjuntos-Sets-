@@ -2,23 +2,27 @@
 #include <stdlib.h>
 #include "LLRBT.h"
 
-#define RED 1
-#define BLACK 0
+#define RED 1 // Define que RED=1.
+#define BLACK 0 // Define que BLACK=0.
 
+// Definição do tipo 'NO'.
 typedef struct no_ NO;
 
 struct no_{
-    int chave;
-    NO* esq;
-    NO* dir;
-    int cor;
+    int chave; // Valor do nó.
+    NO* esq; // Nó esquerdo.
+    NO* dir; // Nó direito.
+    int cor; // cor do nó.
 };
 
+// Definição do tipo 'LLRBT'.
 struct llrbt{
-    NO* raiz;
+    NO* raiz; // Raiz da árvore.
 };
 
+// função para criar uma árvore 'LLRBT'.
 LLRBT* llrbt_criar(){
+    // Aloca memória, checa a alocação e inicializa a árvore.
     LLRBT* aux=(LLRBT*)malloc(sizeof(LLRBT));
 
     if(aux!=NULL){
@@ -29,6 +33,7 @@ LLRBT* llrbt_criar(){
 return aux;
 }
 
+// Função auxiliar que se utiliza do percurso 'pos-ordem' para apagar todos os nós de uma árvore. 
 void apagar_no(NO** raiz){
     if(*raiz!=NULL){
         apagar_no(&(*raiz)->esq);
@@ -39,6 +44,7 @@ void apagar_no(NO** raiz){
     }
 }
 
+// Função principal que chama a função 'apagar_no' para apagar todos os nós e depois apaga a árvore.
 void llrbt_apagar(LLRBT** T){
     if(*T!=NULL){
         if((*T)->raiz!=NULL){
@@ -49,6 +55,7 @@ void llrbt_apagar(LLRBT** T){
     }
 }
 
+// Função auxiliar que procura um elemento dentro da árvore. Retorna 'true' caso encontre e 'false' se não.
 bool busca_aux(NO* raiz, int chave){
     if(raiz!=NULL){
         if(raiz->chave==chave){
@@ -63,6 +70,7 @@ bool busca_aux(NO* raiz, int chave){
 return false;
 }
 
+// Função principal que realiza a chamada da função 'busca_aux" para procurar um elemento dentro da árvore.
 bool llrbt_buscar(LLRBT* T, int chave){
     if(T!=NULL){
         return busca_aux(T->raiz, chave);
@@ -71,6 +79,7 @@ bool llrbt_buscar(LLRBT* T, int chave){
 return false;
 }
 
+// Função auxiliar que se utiliza do percurso 'em-ordem' para imprimir todos os nós de uma árvore em ordem crescente.
 void imprimir_ordem(NO *raiz){
     if(raiz!=NULL){
         imprimir_ordem(raiz->esq);
@@ -81,6 +90,7 @@ void imprimir_ordem(NO *raiz){
     }
 }
 
+// Função principal que realiza a chamada da função 'imprimir_ordem' para imprimir todos os nós da árvore.
 void llrbt_imprimir(LLRBT* T){
     if(T!=NULL){
         imprimir_ordem(T->raiz);
@@ -89,6 +99,7 @@ void llrbt_imprimir(LLRBT* T){
         printf("ERRO: A Árvore não existe\n");
 }
 
+// Função auxiliar que inverte as cores de um nó e de seus filhos, caso existam.
 void inverte(NO* no){
     if(no!=NULL){
         no->cor=!no->cor;
@@ -102,6 +113,7 @@ void inverte(NO* no){
     }
 }
 
+// Função auxiliar que realiza a rotação para a direita de um nó e conserta as cores depois da rotação (balanceamento).
 NO* rotacao_dir(NO* no){
     NO* aux=no->esq;
 
@@ -113,6 +125,7 @@ NO* rotacao_dir(NO* no){
 return aux;
 }
 
+// Função auxiliar que realiza a rotação para a esquerda de um nó e conserta as cores depois da rotação (balanceamento).
 NO* rotacao_esq(NO* no){
     NO* aux=no->dir;
 
@@ -124,6 +137,7 @@ NO* rotacao_esq(NO* no){
 return aux;
 }
 
+// Função auxliar que retorna se um nó é vermelho ou não.
 bool vermelho(NO* no){
     if(no!=NULL){
         return(no->cor==RED);
@@ -132,7 +146,9 @@ bool vermelho(NO* no){
 return(false);
 }
 
+// Função auxiliar para criar um nó.
 NO* cria_no_llrbt(int dado, int cor){
+    // Aloca memória, verifica a alocação e inicializa o nó.
     NO* aux=(NO*)malloc(sizeof(NO));
 
     if(aux!=NULL){
